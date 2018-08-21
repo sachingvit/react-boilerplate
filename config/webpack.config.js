@@ -21,7 +21,11 @@ module.exports = {
   },
   plugins: [
     new webpack.ProgressPlugin(),
-    new CleanWebpackPlugin(["dist"]),
+    // new CleanWebpackPlugin([path.join(__dirname, "../dist")]),
+    new CleanWebpackPlugin(["dist"], {
+      root: path.resolve(__dirname, ".."),
+      verbose: true
+    }),
     new HtmlWebpackPlugin({
       template: "./src/static/index.html"
     })
@@ -39,10 +43,11 @@ module.exports = {
         }
       },
       {
-        test: /\.(png|jpe?g|gif)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "url-loader?limit=8000&name=images/[name].[ext] "
+        test: /\.(?:png|jpg|svg)$/,
+        loader: "url-loader",
+        query: {
+          // Inline images smaller than 10kb as data URIs
+          limit: 10000
         }
       },
       {
